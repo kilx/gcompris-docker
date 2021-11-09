@@ -51,10 +51,12 @@ WORKDIR /opt/qt
 RUN aqt install-qt linux android ${QT_ANDROID_VERSION}
 
 ## prep for build
-RUN mkdir -p /opt/build
+RUN mkdir -p /opt/build/build_android
 WORKDIR /opt/build
 RUN git clone https://github.com/KDE/gcompris.git
-RUN mkdir gcompris/build
-COPY cmake.sh /opt/build/gcompris/
-RUN chmod 755 /opt/build/gcompris/cmake.sh
-WORKDIR /opt/build/gcompris/build
+WORKDIR /opt/build/gcompris
+RUN git submodule init
+RUN git submodule update
+COPY cmake.sh /opt/build
+RUN chmod 755 /opt/build/cmake.sh
+WORKDIR /opt/build/build_android
