@@ -12,7 +12,7 @@ Run the image and attach to it:
 docker run -it --entrypoint=/bin/bash gcompris_build -i
 ```
 
-In contener run the cmake wrapper:
+In conteiner run the cmake wrapper:
 ```
 ../cmake.sh
 ```
