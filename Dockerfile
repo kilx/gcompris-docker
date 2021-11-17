@@ -5,11 +5,11 @@ WORKDIR /
 SHELL ["/bin/bash", "-c"]
 
 # define versions
-ARG ANDROID_API_LEVEL=25
+ARG ANDROID_API_LEVEL=29
 ARG ANDROID_BUILD_TOOLS_LEVEL=28.0.3
 ARG ANDROID_NDK_VERSION=18.1.5063045
 ARG CMDTOOLS_VERSION=7583922
-ARG QT_ANDROID_VERSION=5.15.2
+ARG QT_ANDROID_VERSION=5.12.11
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update -qq && apt install -qq -y \
@@ -39,7 +39,7 @@ ENV ANDROID_NDK=${ANDROID_HOME}/ndk/${ANDROID_NDK_VERSION}
 ENV ANDROID_NDK_ROOT=${ANDROID_HOME}/ndk/${ANDROID_NDK_VERSION}
 ENV CMAKE_ANDROID_NDK=${ANDROID_HOME}/ndk/${ANDROID_NDK_VERSION}
 ENV ANDROID_SDK_ROOT=/opt/android
-ENV QT5_ANDROID=/opt/qt/${QT_ANDROID_VERSION}/android/lib/cmake
+ENV QT5_ANDROID=/opt/qt/${QT_ANDROID_VERSION}/android_armv7/lib/cmake
 
 ## cleanup
 RUN rm -f /tmp/commandlinetools-linux-${CMDTOOLS_VERSION}_latest.zip
@@ -48,10 +48,9 @@ RUN rm -f /tmp/commandlinetools-linux-${CMDTOOLS_VERSION}_latest.zip
 RUN pip install aqtinstall
 RUN mkdir -p /opt/qt
 WORKDIR /opt/qt
-RUN aqt install-qt linux android ${QT_ANDROID_VERSION}
+RUN aqt install-qt linux android ${QT_ANDROID_VERSION} android_armv7
 
 ## prep for build
-RUN mkdir -p /opt/build/build_android
 WORKDIR /opt/build
 RUN git clone https://github.com/KDE/gcompris.git
 WORKDIR /opt/build/gcompris
@@ -59,4 +58,5 @@ RUN git submodule init
 RUN git submodule update
 COPY cmake.sh /opt/build
 RUN chmod 755 /opt/build/cmake.sh
-WORKDIR /opt/build/build_android
+RUN mkdir -p /opt/build/gcompris/build
+WORKDIR /opt/build/gcompris/build
